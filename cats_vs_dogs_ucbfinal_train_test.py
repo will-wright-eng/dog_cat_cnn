@@ -166,7 +166,7 @@ for index, val in enumerate(predictions):
     index_of_highest_probability = np.argmax(val)
     value_of_highest_probability = val[index_of_highest_probability]
     prediction_table[index] = [value_of_highest_probability, index_of_highest_probability,
-    ground_truth[index]]
+        ground_truth[index]]
 assert len(predictions) == len(ground_truth) == len(prediction_table)
 
 ####
