@@ -71,37 +71,38 @@ BATCH_SIZE=5
 # VALIDATION_BATCH_SIZE = 64
 VALIDATION_BATCH_SIZE = 5
 
+## DATA PRE-PROCESSING
+# ImageDataGenerator class: 
+    # Generate batches of tensor image data with real-time data augmentation. 
+    # The data will be looped over (in batches).
+
+train_datagen = ImageDataGenerator(rescale=1./255,
+                                  rotation_range=20,
+                                  width_shift_range=0.2,
+                                  height_shift_range=0.2,
+                                  zoom_range=0.2)
+
+train_generator = train_datagen.flow_from_directory(
+                        TRAIN_DATA_DIR,
+                        target_size=(IMG_WIDTH, IMG_HEIGHT),
+                        batch_size=BATCH_SIZE,
+                        shuffle=True,
+                        seed=12345,
+                        class_mode='categorical')
+
+val_datagen = ImageDataGenerator(rescale=1./255)
+validation_generator = val_datagen.flow_from_directory(
+                        VALIDATION_DATA_DIR,
+                        target_size=(IMG_WIDTH, IMG_HEIGHT),
+                        batch_size=BATCH_SIZE,
+                        shuffle=False,
+                        class_mode='categorical')
 
 def model_iterations(var_one,var_two):
   loop_string = '_dense'+str(var_one)+'_drop'+str(var_two)
   print('\n\n',loop_string,'\n\n')
 
-  ## DATA PRE-PROCESSING
-  # ImageDataGenerator class: 
-      # Generate batches of tensor image data with real-time data augmentation. 
-      # The data will be looped over (in batches).
-
-  train_datagen = ImageDataGenerator(rescale=1./255,
-                                    rotation_range=20,
-                                    width_shift_range=0.2,
-                                    height_shift_range=0.2,
-                                    zoom_range=0.2)
-
-  train_generator = train_datagen.flow_from_directory(
-                          TRAIN_DATA_DIR,
-                          target_size=(IMG_WIDTH, IMG_HEIGHT),
-                          batch_size=BATCH_SIZE,
-                          shuffle=True,
-                          seed=12345,
-                          class_mode='categorical')
-
-  val_datagen = ImageDataGenerator(rescale=1./255)
-  validation_generator = val_datagen.flow_from_directory(
-                          VALIDATION_DATA_DIR,
-                          target_size=(IMG_WIDTH, IMG_HEIGHT),
-                          batch_size=BATCH_SIZE,
-                          shuffle=False,
-                          class_mode='categorical')
+  ## BUILD MODEL WITH MOBILENET BASE
 
   def model_maker():
       base_model = MobileNet(include_top=False, input_shape = (IMG_WIDTH,IMG_HEIGHT,3))
@@ -127,13 +128,7 @@ def model_iterations(var_one,var_two):
                       validation_data = validation_generator,
                       validation_steps = math.ceil(float(VALIDATION_SAMPLES) / BATCH_SIZE))
 
-
   model.save('model'+loop_string+'.h5')
-
-
-
-  # from keras.models import load_model
-  # model = load_model('/home/final_home/model.h5')
 
   ## VISUALIZE MODEL FIT PERFORMANCE
   print(history)
@@ -142,15 +137,12 @@ def model_iterations(var_one,var_two):
   # sets for each training epoch
   acc = history.history['acc']
   val_acc = history.history['val_acc']
-
   # Retrieve a list of list results on training and validation data
   # sets for each training epoch
   loss = history.history['loss']
   val_loss = history.history['val_loss']
-
   # Get number of epochs
   epochs = range(len(acc))
-
   # Plot training and validation accuracy per epoch
   plt.plot(epochs, acc)
   plt.plot(epochs, val_acc)
@@ -159,7 +151,6 @@ def model_iterations(var_one,var_two):
   plt.show()
 
   plt.figure()
-
   # Plot training and validation loss per epoch
   plt.plot(epochs, loss)
   plt.plot(epochs, val_loss)
@@ -167,15 +158,8 @@ def model_iterations(var_one,var_two):
   plt.savefig('loss'+loop_string+'.png',dpi=300)
   plt.show()
 
-
-  #import numpy as np
-
   ## VALIDATE MODEL AND PARSE PREDICTIONS
   # model.predict_generator
-
-  # VALIDATION_DATA_DIR = '/home/final_home/cats_and_dogs_filtered/validation/' # redundant
-  # IMG_WIDTH, IMG_HEIGHT = 224, 224 # redundant
-  # VALIDATION_BATCH_SIZE = 64 # moved to top
 
   validation_datagen = ImageDataGenerator(rescale=1./255)
   validation_generator = validation_datagen.flow_from_directory(
@@ -199,7 +183,6 @@ def model_iterations(var_one,var_two):
           ground_truth[index]]
   assert len(predictions) == len(ground_truth) == len(prediction_table)
 
-  #import pandas as pd
   df = pd.DataFrame(prediction_table).T
   df.columns = ['probability','cat0_dog1','ground_truth']
   df.to_csv('predictions'+loop_string+'.csv')
@@ -213,10 +196,8 @@ def model_iterations(var_one,var_two):
 # NOTE: Change Notebook Settings / Hardware accelerator to 'GPU'
 # with current settings each loop takes approximately 90 seconds
 
-# from time import process_time 
-
-m = np.arange(12, 64, 12).tolist()
-l = np.arange(0.1, 1, 0.2).tolist()
+m = np.arange(12, 64, 12).tolist() # var_one
+l = np.arange(0.1, 1, 0.2).tolist() # var_two
 l = [round(i, 2) for i in l]
 
 # assert len(l)==len(m)
