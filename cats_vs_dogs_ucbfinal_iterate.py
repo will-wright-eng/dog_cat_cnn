@@ -225,6 +225,8 @@ l = [round(i, 2) for i in l]
 # var_one = 12 --> number of nodes in dense layer
 # var_two = 0.1 --> percent dropout 
 
+entire_process_start = process_time() 
+
 for i in m:
   for j in l:
     # Start the stopwatch / counter 
@@ -235,6 +237,9 @@ for i in m:
     # Stop the stopwatch / counter 
     t1_stop = process_time() 
     print('Elapsed time during loop:', t1_stop-t1_start, ' [seconds]') 
+
+entire_process_stop = process_time() 
+print('Elapsed time during all loops:', entire_process_stop-entire_process_start, ' [seconds]') 
 
 ####
 #### Break in code
