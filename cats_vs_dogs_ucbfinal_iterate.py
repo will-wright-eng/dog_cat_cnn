@@ -131,8 +131,6 @@ def model_iterations(var_one,var_two):
   model.save('model'+loop_string+'.h5')
 
   ## VISUALIZE MODEL FIT PERFORMANCE
-  print(history)
-  #import matplotlib. pyplot as plt
   # Retrieve a list of accuracy results on training and validation data
   # sets for each training epoch
   acc = history.history['acc']
@@ -228,7 +226,7 @@ print('Elapsed time during all loops:', entire_process_stop-entire_process_start
 
 ## DOWNLOAD CONTENT FROM PROGRAM
 
-# !zip -r /content/file.zip /content
+!zip -r /content/file.zip /content
 
 ####
 #### Break in code
