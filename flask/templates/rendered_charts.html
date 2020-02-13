@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <center><h2>Matplotlib Charts Generated from Model Run</h2></center>
+</div>
+
+<div class="container">
+    <!--Row with two equal columns-->
+    <div class="row">
+        <div class="col-md-12">
+            <p class="text-center">Validation Accuracy Reaches ~ 97% +/- About 2%</p>
+          <div>
+            <img class="img-fluid" src="{{optimizer}}" width="1440" height="720" >
+          </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p class="text-center">Normalized Confusion Matrix</p>
+        </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+        </div>
+        <div class="col-md-8">
+            <div>
+                <img class="float-center" src="{{confusion}}" width="720" height="720">
+            </div>
+          </div>
+    </div>
+ </div>
+    {% endblock %}
+      </body>
+      </html>
+
