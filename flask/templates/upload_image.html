@@ -4,31 +4,34 @@
 {% block content %}
 <div class="jumbotron">
   <center><h2>Upload an Image of a Dog or a Cat</h2></center>
-
 </div>
 
-
-
-
-
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text">Upload</span>
-  </div>
-  <form action="/upload_image" method="POST" enctype="multipart/form-data">
-
-    <div class="form-group">
-      <label>Select image</label>
-      <div class="custom-file">
-        <input type="file" class="custom-file-input" name="image" id="image">
-        <label class="custom-file-label" for="image">Select image...</label>
-      </div>
+<form action="/upload_image" method="POST" enctype="multipart/form-data">
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <button class="btn btn-outline-secondary" type="submit">Upload</button>
     </div>
+    <div class="custom-file">
+      <input type="file" class="custom-file-input" name="image" id="image">
+      <label class="custom-file-label" for="image">Choose file</label>
+    </div>
+  </div>
+</form>
 
-    <button type="submit" class="btn btn-primary">Upload</button>
 
-  </form>
+  
+
+
+  <div class="container">
+    <div>
+     
+      <!-- <img src="{{imageUrl}}" width="500" height="600"> -->
+    </div>
+    <div>
+      <canvas id="bar-chart" width="800" height="450"></canvas>
+    </div>
 </div>
+
 <script>
   // Add the following code if you want the name of the file appear on select
   $(".custom-file-input").on("change", function() {
@@ -36,6 +39,34 @@
     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
   });
   </script>
+
+<script>
+new Chart(document.getElementById("bar-chart"), {
+    type: 'bar',
+    data: {
+      labels: {{animals | safe }},
+      datasets: [
+        {
+          label: "% Liklihood",
+          backgroundColor: ["#3cba9f","#c45850"],
+          data: {{animals_scores | safe}}
+        }
+      ]
+    },
+    options: {
+      legend: {display: true},
+      title: {
+        display : true,
+        text : "Scoring of Dog or Cat"
+      }
+    }
+});
+</script>
+
+<div>
+     
+  <img src="{{imageUrl}}" width="500" height="600">
+</div>
 
  
 {% endblock %}
